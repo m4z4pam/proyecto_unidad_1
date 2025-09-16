@@ -1,0 +1,81 @@
+{% extends "usuarios_list.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content_usuarios %}
+<div>
+
+            <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                             {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <br>
+
+            <div>
+                <form method="POST" id="form-usuario-editar">
+                    {{ form.hidden_tag() }}
+
+                    <div>
+                        {{ form.username.label() }}
+                        {{ form.username(id="username") }}
+                    </div>
+
+                    <div>
+                        {{ form.email.label() }}
+                        {{ form.email(id="email") }}
+                    </div>
+
+                    {% if form.password %}
+                    <div>
+                        {{ form.password.label() }}
+                        {{ form.password(id="password") }}
+                        <small>
+                            Deja este campo vacio si no quieres cambiar la contraseña
+                        </small>
+                        {% for error in form.password.errors %}
+                            <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div>
+                        {{ form.nombre.label() }}
+                        {{ form.nombre(id="nombre") }}
+                    </div>
+
+                    <div>
+                        {{ form.apellido.label() }}
+                        {{ form.apellido(id="apellido") }}
+                    </div>
+
+                    <div>
+                        {{ form.rol.label() }}
+                        {{ form.rol(id="rol") }}
+                    </div>
+
+                    <div>
+                        {{ form.activo() }}
+                        {{ form.activo.label(id="activo") }}
+                    </div>
+
+                    <div>
+                        {{ form.submit(class="btn btn-success") }}
+                    </div>
+
+
+                    <a href="{{ url_for('usuarios.lista_usuarios') }}" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+                </form>
+            </div>
+
+<script src="{{ url_for('static', filename='js/editar_usuario.js') }}"></script>
+</div>
+{% endblock %}

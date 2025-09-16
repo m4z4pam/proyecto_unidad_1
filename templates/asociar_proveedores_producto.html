@@ -1,0 +1,82 @@
+{% extends "proveedores_producto_list.html" %}
+
+{% block titulo %}
+Asociar Proveedores a {{ producto[1] if producto is sequence else producto.nombre }}
+{% endblock %}
+
+{% block contenido_porve_prod %}
+<div>
+    <div class="flash-container-editar">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <h2>Asociar proveedor al producto: {{ producto[1] if producto is sequence else producto.nombre }}</h2>
+    
+    <div>
+        <h3>Informacion del Producto:</h3>
+        <p><strong>ID:</strong> {{ producto[0] if producto is sequence else producto.id }}</p>
+        <p><strong>Nombre:</strong> {{ producto[1] if producto is sequence else producto.nombre }}</p>
+        {% if producto is sequence and producto|length > 2 %}
+        <p><strong>Categoria:</strong> {{ producto[2] }}</p>
+        <p><strong>Precio:</strong> ${{ "%.2f"|format(producto[3]) }}</p>
+        <p><strong>Stock:</strong> {{ producto[4] }}</p>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <h3>Seleccionar proveedor para asociar</h3>
+    
+    {% if proveedores %}
+        <form method="POST" id="asociarProveedorForm">
+            {{ form.hidden_tag() }}
+            
+            <div>
+                {{ form.id_proveedor.label }}<br>
+                {{ form.id_proveedor(id="id_proveedor") }}
+            </div>
+
+            <div>
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    {% else %}
+        <p>No hay proveedores disponibles para asociar.</p>
+        <a href="{{ url_for('proveedores.nuevo') }}" class="btn btn-secondary">
+            Registrar nuevo proveedor
+        </a>
+    {% endif %}
+
+    <div>
+        <a href="{{ url_for('productos_proveedores.lista_productos_proveedores') }}" class="btn btn-secondary">
+            Volver a la lista
+        </a>
+        <a href="{{ url_for('productos_proveedores.ver_proveedores_de_producto', id_producto=producto[0] if producto is sequence else producto.id) }}" class="btn btn-secondary">
+            Ver proveedores asociados
+        </a>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('asociarProveedorForm');
+    const select = document.getElementById('id_proveedor');
+    
+    form.addEventListener('submit', function(e) {
+        if (select.value === '') {
+            e.preventDefault();
+            alert('Por favor, seleccione un proveedor');
+            select.focus();
+        }
+    });
+});
+</script>
+{% endblock %}

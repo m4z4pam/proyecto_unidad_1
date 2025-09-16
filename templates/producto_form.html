@@ -1,0 +1,64 @@
+{% extends "productos_list.html" %}
+
+{% block producto_form %}
+
+
+{% block filtros_productos %}
+{#  Sobrescribo vacio para que no aparezca nada  #}
+{% endblock %}
+
+        <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+
+
+
+    <h1>Agregar Nuevo Producto</h1>
+
+   <form method="POST" id="productoForm">
+    {{ form.hidden_tag() }}
+
+    <div>
+        {{ form.nombre.label }}
+        {{ form.nombre( id="nombre") }}
+    </div>
+
+    <div>
+        {{ form.categoria.label }}
+        {{ form.categoria(id="categoria") }}
+    </div>
+
+    <div>
+        {{ form.precio.label }}
+        {{ form.precio(id="precio") }}
+    </div>
+
+    <div>
+        {{ form.stock.label }}
+        {{ form.stock(id="stock") }}
+    </div>
+
+    <div>
+        {{ form.costo.label }}
+        {{ form.costo(id="costo") }}
+    </div>
+    
+    <br><br><br><br>
+
+    {{ form.submit(class="btn btn-success") }}
+    <a href="{{ url_for('productos.lista_productos') }}" class="btn btn-danger">Cancelar</a>
+</form>
+
+<script src="{{ url_for('static', filename='js/validar_producto.js') }}"></script>
+
+
+{% endblock %}

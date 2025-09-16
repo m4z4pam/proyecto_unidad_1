@@ -1,0 +1,74 @@
+{% extends "ventas_list.html" %}
+
+{% block content_ventas %}
+
+
+            <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                             {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+
+        <div>
+            <h2 >Resumen de Ventas</h2>
+
+            <form method="POST" action="{{ url_for('ventas.resumen_ventas') }}" >
+                <div >
+                    <label for="fecha_inicio" >Desde:</label>
+                    <input type="date" name="fecha_inicio" id="fecha_inicio" 
+                       value="{{ fecha_inicio or '' }}">
+                </div>
+
+                <div >
+                    <label for="fecha_fin" >Hasta:</label>
+                    <input type="date" name="fecha_fin" id="fecha_fin" 
+                         value="{{ fecha_fin or '' }}">
+                </div>
+
+                <div >
+                    <button type="submit"
+                            class="btn btn-primary">
+                         Filtrar
+                    </button>
+                </div>
+            </form>
+
+            {% if resumen %}
+                <div class="resumen-resultados">
+                    <h4 >Resultados</h4>
+                    <ul >
+                        <li >
+                            <strong>Total de ventas:</strong>
+                            <span>{{ resumen[0] or 0 }}</span>
+                        </li>
+                        <li >
+                            <strong>Ingresos totales:</strong>
+                            <span>${{ resumen[1] or 0 }}</span>
+                        </li>
+                        <li >
+                            <strong>Promedio por venta:</strong>
+                            <span>${{ resumen[2] or 0 }}</span>
+                        </li>
+                    </ul>
+                </div>
+            {% else %}
+                <div >
+                     No hay datos de ventas en este periodo.
+                </div>
+            {% endif %}
+
+            <div>
+                <a href="{{ url_for('ventas.listar_ventas') }}" 
+                class="btn btn-primary">
+                    Volver a Ventas
+                </a>
+            </div>
+        </div>
+{% endblock %}

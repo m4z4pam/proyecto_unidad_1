@@ -1,0 +1,58 @@
+{% extends "ventas_list.html" %}
+
+{% block content_ventas %}
+
+
+    <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                             {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+
+
+    <div >
+        <h2 >Top {{ limite }} Productos Mas Vendidos</h2>
+
+        {% if productos and productos|length > 0 %}
+            <table >
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Categoria</th>
+                        <th>Total Vendido</th>
+                        <th>Ingresos Generados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prod in productos %}
+                    <tr>
+                        <td>{{ prod[0] }}</td>
+                        <td>{{ prod[1] }}</td>
+                        <td>{{ prod[2] }}</td>
+                        <td>${{ "%.2f"|format(prod[3]) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div >
+                 No hay productos vendidos aun.
+            </div>
+        {% endif %}
+
+        <div >
+            <a href="{{ url_for('ventas.listar_ventas') }}" 
+               class="btn btn-primary">
+                Volver a Ventas
+            </a>
+        </div>
+    </div>
+
+{% endblock %}

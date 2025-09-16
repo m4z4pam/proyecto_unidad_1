@@ -1,0 +1,80 @@
+{% extends "productos_list.html" %}
+
+{% block inventario %}
+
+
+{% block filtros_productos %}
+{#  Sobrescribo vacio para que no aparezca nada  #}
+{% endblock %}
+{% block nav %}
+{# Sobrescribo el nav para adaptarlo al inventario #}
+{% endblock %}
+
+        <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+<body>
+    <div>
+         <nav>
+            <a href="{{ url_for('productos.lista_productos') }}"> Gestion de Productos</a>
+            <a href="{{ url_for('productos.nuevo_producto') }}"> Nuevo Producto</a>
+            <a href="{{ url_for('index') }}">Volver al inicio</a>
+            <a href="{{ url_for('productos.exportar_inventario_pdf') }}">  Descargar reporte en PDF </a>
+            
+        </nav>
+
+
+
+
+        <h1> Reporte de Inventario</h1>
+
+        <section >
+            <h2>Estadisticas generales</h2>
+            <ul>
+                <li><strong>Total de productos:</strong> {{ estadisticas.total_productos }}</li>
+                <li><strong>Valor total del inventario:</strong> ${{ "%.2f"|format(estadisticas.valor_total) }}</li>
+                <li><strong>Productos sin stock:</strong> {{ estadisticas.sin_stock }}</li>
+                <li><strong>Productos con stock bajo (≤5):</strong> {{ estadisticas.bajo_stock }}</li>
+            </ul>
+        </section>
+
+        <section >
+            <h2> Productos con stock bajo</h2>
+            {% if productos_bajo_stock %}
+                <table >
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Categoria</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in productos_bajo_stock %}
+                        <tr >
+                            <td>{{ p[0] }}</td>
+                            <td>{{ p[1] }}</td>
+                            <td>{{ p[2] }}</td>
+                            <td>${{ "%.2f"|format(p[3]) }}</td>
+                            <td>{{ p[4] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p> No hay productos con stock bajo.</p>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}

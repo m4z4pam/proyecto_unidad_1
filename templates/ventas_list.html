@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Ventas</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+
+</head>
+<body>
+
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('productos.lista_productos') }}"> Gestion de Productos</a>
+        <a href="{{ url_for('ventas.listar_ventas') }}">Ver Ventas</a>
+                <a href="{{ url_for('ventas.resumen_ventas')}}">datelle de Ventas</a>
+                <a href="{{ url_for('ventas.top_productos') }}">Productos mas Vendidos</a>
+                <a href="{{ url_for('ventas.menos_productos') }}">Productos menos Vendidos</a>
+
+
+    </nav>
+
+
+            <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                             {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+
+
+        {% block content_ventas %}
+    <div >
+        <h1 > Lista de Ventas</h1>
+
+        {% if ventas and ventas|length > 0 %}
+        <div >
+            <table >
+                <thead >
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venta in ventas %}
+                    <tr>
+                        <td>{{ venta[0] }}</td>
+                        <td>{{ venta[1] | datetimeformat("%d/%m/%Y %H:%M") if venta[1] else '' }}</td>
+                        <td>{{ (venta[2] or 'Cliente desconocido') | capitalize }}</td>
+                        <td>${{ venta[3] | round(2) }}</td>
+                        <td>
+                            <a href="{{ url_for('ventas.ver_venta', id_venta=venta[0]) }}" class="btn btn-primary ">
+                                Ver Detalle
+                            </a>
+                            <a href="{{ url_for('ventas.eliminar_venta_route', id_venta=venta[0]) }}" 
+                               class="btn btn-danger "
+                               onclick="return confirm('¿Seguro que quieres eliminar esta venta?')">
+                                Eliminar
+                            </a>
+
+                             <a href="{{ url_for('ventas.editar_venta', id_venta=venta[0]) }}" class="btn btn-warning">Editar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div>
+            No hay ventas registradas todavia.
+        </div>
+        {% endif %}
+
+        <br>
+        <div>
+            <a href="{{ url_for('ventas.nueva_venta') }}" class="btn btn-success">
+                 Nueva Venta
+            </a>
+        </div>
+    </div>
+    {% endblock %}
+
+</body>
+</html>

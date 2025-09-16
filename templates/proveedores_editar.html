@@ -1,0 +1,55 @@
+{% extends "proveedores_list.html" %}
+
+{% block content_proveedores %}
+
+<br>
+<div>
+    <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                             {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <br>
+
+        <h1> Editar proveedor</h1>
+        <form method="POST" id="proveedorForm">
+            {{ form.hidden_tag() }}
+
+            <div>
+                {{ form.nombre.label }}
+                {{ form.nombre(id="nombre", size=100) }}
+            </div>
+
+            <div>
+                {{ form.rfc.label }}
+                {{ form.rfc(id="rfc", size=13) }}
+            </div>
+
+            <div>
+                {{ form.telefono.label }}
+                {{ form.telefono(id="telefono", size=10) }}
+            </div>
+
+            <div>
+                {{ form.email.label }}
+                {{ form.email(id="email", size=100) }}
+            </div>
+
+            <div>
+                {{ form.direccion.label }}
+                {{ form.direccion(id="direccion", size=150) }}
+            </div>
+
+            <div>
+                {{ form.submit(class="btn btn-success") }}
+            </div>
+        </form>
+    <script src="{{ url_for('static', filename='js/validar_proveedor.js') }}"></script>
+</div>
+{% endblock %}

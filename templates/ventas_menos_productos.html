@@ -1,0 +1,45 @@
+{% extends "ventas_list.html" %}
+
+{% block content_ventas %}
+
+
+            <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                             {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+    <div>
+            <h1>Productos menos vendidos (Top {{ limite }})</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Producto</th>
+                        <th>Nombre</th>
+                        <th>Total Vendidos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if productos %}
+                        {% for producto in productos %}
+                        <tr>
+                            <td>{{ producto[0] }}</td>
+                            <td>{{ producto[1] }}</td>
+                            <td>{{ producto[2] }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td>No hay datos disponibles</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+
+     </div>
+
+{% endblock %}

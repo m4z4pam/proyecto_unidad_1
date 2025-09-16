@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Papeleria</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+
+
+
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('clientes.lista_clientes') }}"> Ver Clientes</a>
+        <a href="{{ url_for('productos.lista_productos') }}"> Gestion de Productos</a>
+        <a href="{{ url_for('ventas.listar_ventas') }}">Ver Ventas</a>
+        <a href="{{ url_for('proveedores.lista_proveedores') }}">Gestion de Proveedores</a>
+        <a href="{{ url_for('productos_proveedores.lista_productos_proveedores') }}">
+            Ver Productos-Proveedores 
+        </a>
+        <a href="{{ url_for('usuarios.lista_usuarios') }}">usuarios</a>
+    </nav>
+
+            <div class="flash-container-editar">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+
+
+    {% if esta_logueado %}
+        <p>Bienvenido, {{ usuario_actual.nombre }} ({{ usuario_actual.rol }})</p>
+        <a href="/logout" class="btn btn-danger">Cerrar Sesion</a>
+        {% if usuario_actual.rol == 'admin' %}
+        <a href="{{ url_for('usuarios.nuevo_usuario') }}" class="btn btn-primary">
+            Registrar Usuario
+        </a>
+        {% endif %}
+    {% endif %}
+
+    {% if usuario_actual.rol == 'admin' %}
+        <form action="{{ url_for('usuarios.limpiar_inactivos') }}" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('Los usuarios inactivos se eliminaran definitivamente. ¿Seguro que quieres continuar?');">
+                Limpiar Usuarios Inactivos
+            </button>
+        </form>
+    {% endif %}
+
+    <h1>Lista de usuarios</h1>
+
+
+
+    {% block content_usuarios %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Rol</th>
+                <th>Activo</th>
+                <th>Fecha de Registro</th>
+                <th>ultimo Login</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                 <td>{{ usuario[0] }}</td>
+                    <td>{{ usuario[1] }}</td>
+                    <td>{{ usuario[2] }}</td>
+                    <td>{{ usuario[3] }}</td>
+                    <td>{{ usuario[4] }}</td>
+                    <td>{{ usuario[5] }}</td>
+                    <td>{{ 'Si' if usuario[6] else 'No' }}</td>
+                    <td>{{ usuario[7] }}</td>
+                    <td>{{ usuario[8] if usuario[8] else 'Nunca' }}</td>
+                <td>
+                    <a href="{{ url_for('usuarios.editar_usuario', id_usuario=usuario[0]) }}" class="btn btn-warning">
+                        Editar
+                    </a>
+                    <br>
+                    <br>
+                    <a href="{{ url_for('usuarios.eliminar_usuario_route', id_usuario=usuario[0]) }}" class="btn btn-danger" onclick="return confirm('los usuarios inactivos se eliminan despues de 30 dias automaticaente, ¿Estas seguro de que deseas desactivar este usuario?');">
+                        desactivar
+                    </a>
+                    <br>
+                    <br>
+                    <a href="{{ url_for('usuarios.cambiar_password', id_usuario=usuario[0]) }}" class="btn btn-danger">
+                        Cambiar Contraseña
+                </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    {% endblock %}  
+
+</body>
+</html>
+
+    

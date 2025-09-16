@@ -1,0 +1,52 @@
+{% extends "ventas_list.html" %}
+
+{% block content_ventas %}
+<div>
+    <h2>Editar Venta #{{ venta[0] }}</h2>
+
+    <form id="ventaForm" method="POST">
+        <div >
+            <label>Cliente</label>
+            <select id="id_cliente" name="id_cliente">
+                <option value="">-- Seleccione un cliente --</option>
+                {% for cliente in clientes %}
+                    <option value="{{ cliente[0] }}" 
+                        {% if cliente[0] == venta[2] %}selected{% endif %}>
+                        {{ cliente[1] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto[1] }}</td>
+                    <td>{{ producto[3] | currency }}</td>
+                    <td>{{ producto[4] }}</td>
+                    <td>
+                        <input type="number"
+                               name="producto_{{ producto[0] }}"
+                               min="0" max="{{ producto[4] }}"
+                               value="{{ cantidades_existentes[producto[0]|string] if cantidades_existentes and producto[0]|string in cantidades_existentes else 0 }}">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <a href="{{ url_for('ventas.listar_ventas') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+    <script src="{{ url_for('static', filename='js/validar_venta.js') }}"></script>
+</div>
+{% endblock %}

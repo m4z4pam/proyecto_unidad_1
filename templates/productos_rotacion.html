@@ -1,0 +1,58 @@
+{% extends "productos_list.html" %}
+
+{% block producto_form %}
+
+
+{% block filtros_productos %}
+{#  Sobrescribo vacio para que no aparezca nada  #}
+{% endblock %}
+
+
+        <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+
+    <h2>Reporte de Rotacion de Inventario</h2>
+
+
+                    <p>
+                      La rotacion de inventario indica que tan rapido se venden los productos. 
+                      Se calcula tomando las ventas de los ultimos 30 dias y comparandolas con la cantidad que tienes en stock. 
+                      Un numero mas alto significa que el producto se vende rapido, mientras que un numero bajo indica que esta acumulandose en bodega.
+                    </p>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Ventas ultimos 30 dias</th>
+                    <th>Rotacion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in rotacion %}
+                <tr>
+                    <td>{{ p[0] }}</td> {# id_producto #}
+                    <td>{{ p[1] }}</td> {# nombre #}
+                    <td>{{ p[2] }}</td> {# ventas_mes #}
+                    <td>{{ p[3] }}</td> {# rotacion #}
+                </tr>
+                {% else %}
+                <tr>
+                    <td>No hay datos disponibles.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+{% endblock %}

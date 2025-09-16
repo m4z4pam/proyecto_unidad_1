@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" class="html_login">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesion - Sistema de Gestion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body class="body_login">
+    <div class="container_login">
+        <div class="header_login">
+            <h1 class="title_login">Iniciar Sesion</h1>
+            <p class="subtitle_login">Sistema de Gestion Empresarial</p>
+        </div>
+
+        <div class="messages_login">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="message_login message_login--{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <form method="POST" class="form_login">
+            <div class="group_login">
+                <label for="username" class="label_login">Usuario:</label>
+                <input type="text" id="username" name="username" class="input_login" required autofocus>
+            </div>
+
+            <div class="group_login">
+                <label for="password" class="label_login">Contraseña:</label>
+                <input type="password" id="password" name="password" class="input_login" required>
+            </div>
+
+            <button type="submit" class="button_login">Iniciar Sesion</button>
+        </form>
+
+        <div class="demo_login">
+            <strong class="demo_login__title">Credenciales de demo:</strong><br>
+            Usuario: <strong class="demo_login__user">admin</strong><br>
+            Contraseña: <strong class="demo_login__pass">admin123</strong>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>

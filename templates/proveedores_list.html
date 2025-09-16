@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Proveedores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('productos.lista_productos') }}">Gestion de Productos</a>
+        <a href="{{ url_for('proveedores.lista_proveedores') }}">Gestion de Proveedores</a>
+    </nav>
+
+    <div class="flash-container-editar">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    {% block content_proveedores %}
+    <div>
+        <h1>Lista de Proveedores</h1>
+
+        {% if proveedores and proveedores|length > 0 %}
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th> 
+                        <th>Nombre</th>
+                        <th>Telefono</th>
+                        <th>Email</th>
+                        <th>Direccion</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prov in proveedores %}
+                    <tr>
+                        <td>{{ prov[0] }}</td>
+                        <td>{{ prov[1] | capitalize }}</td>
+                        <td>{{ prov[2] }}</td>
+                        <td>{{ prov[3] }}</td>
+                        <td>{{ prov[4] }}</td>
+                        <td>
+                            <a href="{{ url_for('proveedores.editar_proveedor', id_proveedor=prov[0]) }}" class="btn btn-warning">Editar</a>
+                            <br>
+                            <br>
+                            <form action="{{ url_for('proveedores.eliminar_proveedor_route', id_proveedor=prov[0]) }}" 
+                                method="POST">
+                                <button type="submit" class="btn btn-danger"
+                                        onclick="return confirm('¿Seguro que deseas eliminar este proveedor?');">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div>
+            No hay proveedores registrados todavia.
+        </div>
+        {% endif %}
+
+        <br>
+        <div>
+            <a href="{{ url_for('proveedores.nuevo_proveedor') }}" class="btn btn-success">
+                Nuevo Proveedor
+            </a>
+        </div>
+    </div>
+
+
+
+    {% endblock %}
+
+</body>
+</html>

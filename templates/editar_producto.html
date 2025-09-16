@@ -1,0 +1,72 @@
+{% extends "productos_list.html" %}
+
+{% block editar_producto %}
+
+
+{% block filtros_productos %}
+{#  Sobrescribo vacio para que no aparezca nada  #}
+{% endblock %}
+{% block nav %}
+{# Sobrescribo el nav para adaptarlo al inventario #}
+{% endblock %}
+<body>
+
+
+    <nav>
+            <a href="{{ url_for('productos.nuevo_producto') }}" >Nuevo Producto</a>
+            <a href="{{ url_for('productos.lista_productos') }}"> Gestion de Productos</a>
+            <a href="{{ url_for('index') }}">Volver al inicio</a>
+        </nav>
+
+
+        <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+
+
+    <h1>Editar Producto</h1>
+
+    <form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div>
+        {{ form.nombre.label }}
+        {{ form.nombre(class="input") }}
+    </div>
+
+    <div>
+        {{ form.categoria.label }}
+        {{ form.categoria(class="input") }}
+    </div>
+
+    <div>
+        {{ form.precio.label }}
+        {{ form.precio(class="input") }}
+    </div>
+
+    <div>
+        {{ form.stock.label }}
+        {{ form.stock(class="input") }}
+    </div>
+
+    <div>
+        {{ form.costo.label }}
+        {{ form.costo(id="costo") }}
+    </div>
+    
+
+<br><br><br>
+    {{ form.submit(class="btn btn-success", value="Guardar cambios") }}
+    <a href="{{ url_for('productos.lista_productos') }}" class="btn btn-danger">Cancelar</a>
+</form>
+
+{% endblock %}

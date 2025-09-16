@@ -1,0 +1,65 @@
+{% extends "usuarios_list.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content_usuarios %}
+<div>
+        <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                             {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <br>
+
+            <div>
+                <form method="POST" id="usuario_form">
+                    {{ form.hidden_tag() }}
+
+                    <div>
+                        {{ form.username.label() }}
+                        {{ form.username(id="username") }}
+                    </div>
+
+                    <div>
+                        {{ form.email.label() }}
+                        {{ form.email(id="email") }}
+                    </div>
+
+                    <div>
+                        {{ form.password.label() }}
+                        {{ form.password(id="password") }}
+                    </div>
+
+                    <div>
+                        {{ form.nombre.label() }}
+                        {{ form.nombre(id="nombre") }}
+                    </div>
+
+                    <div>
+                        {{ form.apellido.label() }}
+                        {{ form.apellido(id="apellido") }}
+                    </div>
+
+                    <div>
+                        {{ form.rol.label() }}
+                        {{ form.rol(id="rol") }}
+                    </div>
+
+                    <button type="submit" class="btn btn-success">
+                        Guardar
+                    </button>
+                    <a href="{{ url_for('usuarios.lista_usuarios') }}" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+                </form>
+            </div>        
+
+<script src="{{ url_for('static', filename='js/usuario_form.js') }}"></script>
+</div>
+{% endblock %}

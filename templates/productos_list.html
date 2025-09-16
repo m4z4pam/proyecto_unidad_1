@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+    <script src="{{ url_for('static', filename='js/productos.js') }}"></script>
+    
+</head>
+
+<body>
+    <div >
+
+        {% block nav %}
+        <nav>
+            <a href="{{ url_for('productos.nuevo_producto') }}">Nuevo Producto</a>
+            <a href="{{ url_for('productos.reporte_inventario') }}">Inventario</a>
+            <a href="{{ url_for('productos.reporte_rotacion') }}">rotacion de Inventario</a>
+            <a href="{{ url_for('index') }}">Volver al inicio</a>
+            <a href="{{ url_for('productos.exportar_ganancias_pdf') }}" class="btn btn-primary">
+                Descargar Reporte de Ganancias (PDF)
+            </a>
+            <a href="{{ url_for('productos.exportar_inventario_pdf') }}" class="btn btn-primary">Descargar reporte en PDF</a>
+            <a href="{{ url_for('productos.reporte_costos') }}" class="btn btn-primary">Reporte de costos (PDF)</a>
+
+
+        </nav>
+        {% endblock %}
+
+    {% block filtros_productos %}
+        <h1 >Lista de Productos</h1>
+
+        <div class="flash-container-productos">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="busqueda-filtros">
+
+            <form action="{{ url_for('productos.buscar_productos') }}" method="GET">
+                <input type="text" name="q" placeholder=" Buscar producto por nombre" value="{{ busqueda or '' }}">
+                <button type="submit">Buscar</button>
+            </form>
+
+            <form action="{{ url_for('productos.productos_por_categoria', categoria='Escolares') }}" method="GET">
+                <label for="categoria">Filtrar por categoria:</label>
+                <select id="categoria" name="categoria" onchange="if(this.value) window.location.href='/productos/categoria/' + this.value;">
+                    <option value="">-- Seleccionar --</option>
+                    <option value="Escolares" {% if categoria_filtro=='Escolares' %}selected{% endif %}>Escolares</option>
+                    <option value="Oficina" {% if categoria_filtro=='Oficina' %}selected{% endif %}>Oficina</option>
+                    <option value="Arte" {% if categoria_filtro=='Arte' %}selected{% endif %}>Arte</option>
+                </select>
+            </form>
+
+            <form action="{{ url_for('productos.productos_stock_bajo') }}" method="GET">
+                <label for="limite">Stock bajo (menor o igual a):</label>
+                <input type="number" id="limite" name="limite" min="1" max="50" value="{{ limite or 10 }}">
+                <button type="submit">Filtrar</button>
+            </form>
+
+            <a href="{{ url_for('productos.lista_productos') }}" class="btn-todos-productos"> Todos los productos</a>
+            {% endblock %}
+        </div>
+
+{% block producto_form %}{% endblock %}
+{% block inventario %}{% endblock %}
+{% block editar_producto %}{% endblock %}
+
+
+        {% if productos %}
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Categoria</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Costo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos %}
+                            <tr>
+                                <td>{{ producto[0] }}</td> <!-- id -->
+                                <td>{{ producto[1] }}</td> <!-- nombre -->
+                                <td>{{ producto[2] }}</td> <!-- categoria -->
+                                <td>${{ "%.2f"|format(producto[3]) }}</td> <!-- precio -->
+                                <td>{{ producto[4] }}</td> <!-- stock -->
+                                <td>${{ "%.2f"|format(producto[6]) }}</td> <!-- costo -->
+                                <td>
+                                    <div class="grupo-acciones-producto">
+                                        <a href="{{ url_for('productos.editar_producto_route', id=producto[0]) }}" class="btn btn-warning">Editar</a>
+                                        <form action="{{ url_for('productos.eliminar_producto_ruta', id=producto[0]) }}" method="POST" style="display:inline;">
+                                            <button class="btn btn-danger" type="submit" onclick="return confirm('¿Seguro que deseas eliminar este producto?')">
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+        {% endif %}
+    </div>
+
+
+
+
+
+</body>
+</html>

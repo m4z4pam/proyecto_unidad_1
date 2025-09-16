@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Papeleria</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('clientes.lista_clientes') }}"> Ver Clientes</a>
+        <a href="{{ url_for('productos.lista_productos') }}"> Gestion de Productos</a>
+        <a href="{{ url_for('ventas.listar_ventas') }}">Ver Ventas</a>
+        <a href="{{ url_for('proveedores.lista_proveedores') }}">Gestion de Proveedores</a>
+        <a href="{{ url_for('productos_proveedores.lista_productos_proveedores') }}">
+            Ver Productos-Proveedores 
+        </a>
+        <a href="{{ url_for('usuarios.lista_usuarios') }}">usuarios</a>
+        <a href="{{ url_for('backup.backup_total') }}" class="btn btn-primary">
+            Descargar Backup Completo
+        </a>
+
+    </nav>
+
+    {% if esta_logueado %}
+        <p>Bienvenido, {{ usuario_actual.nombre | capitalize}} ({{ usuario_actual.rol }})</p>
+        <a href="/" class="btn btn-danger">Cerrar Sesion</a>
+        {% if usuario_actual.rol == 'admin' %}
+        <a href="{{ url_for('usuarios.nuevo_usuario') }}" class="btn btn-primary">
+            Registrar Usuario
+        </a>
+        {% endif %}
+    {% endif %}
+    <div>
+        <a href="{{ url_for('reportes.ventas') }}" class="btn btn-primary">
+            reporte 
+        </a>
+    </div>
+
+    <h1>Bienvenido a la papeleria</h1>
+    
+    {% if productos %}
+    <h2>Lista de productos:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Categoria</th>
+                <th>Precio</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in productos %}
+            <tr>
+                <td>{{ p[0] }}</td>
+                <td>{{ p[1] | capitalize}}</td>
+                <td>{{ p[2] }}</td>
+                <td>${{ "%.2f"|format(p[3]) }}</td>
+                <td>{{ p[4] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay productos registrados todavia.</p>
+{% endif %}
+
+</body>
+</html>

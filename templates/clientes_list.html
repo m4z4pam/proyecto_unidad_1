@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Clientes</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+   
+</head>
+<body>
+    <h1>Lista de Clientes</h1>
+
+    <nav>
+    <a href="{{ url_for('clientes.nuevo_cliente') }}">Agregar Cliente</a>
+    <a href="{{ url_for('index') }}"> Volver al inicio</a>
+    <a href="{{ url_for('clientes.lista_clientes') }}">Ver Clientes</a>
+
+    </nav>
+
+    <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                             {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+    {% if clientes %}
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Telefono</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente[0] }}</td>
+                <td>{{ cliente[1] }}</td>
+                <td>{{ cliente[2] }}</td>
+                <td>{{ cliente[3] }}</td>
+                <td>
+                   <a href="{{ url_for('clientes.editar_cliente', id=cliente[0]) }}" class="btn btn-success">Editar</a>
+                    <form method="POST" action="{{ url_for('clientes.eliminar_cliente', id=cliente[0]) }}" style="display: inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este cliente?')">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No hay clientes registrados.</p>
+    {% endif %}
+
+
+    {% block cliente_form %}{% endblock %}
+
+    {% block editar_cliente %}{% endblock %}
+
+
+</body>
+</html>

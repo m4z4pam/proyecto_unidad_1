@@ -1,0 +1,53 @@
+{% extends "ventas_list.html" %}
+
+{% block content_ventas %}
+
+
+
+    <div class="flash-container-editar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                             {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+
+    <h1>Detalle de Venta #{{ venta[0] }}</h1>
+    <p><strong>Fecha:</strong> {{ venta[1] }}</p>
+    <p><strong>Cliente:</strong> {{ venta[3] }}</p>
+    <p><strong>Total:</strong> ${{ "%.2f"|format(venta[4]) }}</p>
+
+    <h2> Productos vendidos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID Detalle</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in detalles %}
+            <tr>
+                <td>{{ detalle[0] }}</td>
+                <td>{{ detalle[1] }}</td>
+                <td>{{ detalle[2] }}</td>
+                <td>${{ "%.2f"|format(detalle[3]) }}</td>
+                <td>${{ "%.2f"|format(detalle[4]) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a class="btn btn-primary" href="{{ url_for('ventas.listar_ventas') }}">Volver a Ventas</a>
+</body>
+</html>
+{% endblock %}

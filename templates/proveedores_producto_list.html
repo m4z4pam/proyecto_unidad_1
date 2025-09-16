@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Gestion de Productos y Proveedores{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+    <script src="{{ url_for('static', filename='js/drop_down.js') }}"></script>
+</head>
+<body>
+
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        
+        {% if producto %}
+        <a href="{{ url_for('productos_proveedores.asociar', id_producto=producto['id'] if producto is mapping else producto[0]) }}">
+            Asociar proveedor
+        </a>
+        {% endif %}
+        
+    </nav>
+
+
+    <div class="flash-container-editar">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    {% block contenido_porve_prod %}
+    <div>
+        <h2>Lista de productos</h2>
+        {% if productos %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Categoria</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Ver Proveedores</th>
+                        <th>Asociar Proveedor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in productos %}
+                    <tr>
+                        <td>{{ p[0] }}</td>
+                        <td>{{ p[1] }}</td>
+                        <td>{{ p[2] }}</td>
+                        <td>${{ "%.2f"|format(p[3]) }}</td>
+                        <td>{{ p[4] }}</td>
+                        <td>
+                            <a href="{{ url_for('productos_proveedores.ver_proveedores_de_producto', id_producto=p[0]) }}" class="btn btn-primary">
+                                Ver Proveedores
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('productos_proveedores.asociar', id_producto=p[0]) }}" class="btn btn-secondary ">
+                                Asociar
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No hay productos registrados todavia.</p>
+        {% endif %}
+    </div>
+    {% endblock %}
+
+</body>
+</html>

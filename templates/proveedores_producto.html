@@ -1,0 +1,91 @@
+{% extends "proveedores_producto_list.html" %}
+
+{% block titulo %}
+Proveedores de {{ producto[1] if producto is sequence else producto.nombre }}
+{% endblock %}
+
+{% block contenido_porve_prod %}
+<div>
+    <div class="flash-container-editar">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <h2>Proveedores asociados al producto: {{ producto[1] if producto is sequence else producto.nombre }}</h2>
+    
+    <div>
+        <h3>Informacion del Producto:</h3>
+        <p><strong>ID:</strong> {{ producto[0] if producto is sequence else producto.id }}</p>
+        <p><strong>Nombre:</strong> {{ producto[1] if producto is sequence else producto.nombre }}</p>
+        {% if producto is sequence and producto|length > 2 %}
+        <p><strong>Categoria:</strong> {{ producto[2] }}</p>
+        <p><strong>Precio:</strong> ${{ "%.2f"|format(producto[3]) }}</p>
+        <p><strong>Stock:</strong> {{ producto[4] }}</p>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <h3>Lista de Proveedores</h3>
+    {% if proveedores %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>RFC</th>
+                    <th>Telefono</th>
+                    <th>Email</th>
+                    <th>Direccion</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prov in proveedores %}
+                <tr>
+                    <td>{{ prov[0] }}</td>
+                    <td>{{ prov[1] }}</td>
+                    <td>{{ prov[2] }}</td>
+                    <td>{{ prov[3] }}</td>
+                    <td>{{ prov[4] }}</td>
+                    <td>{{ prov[5] }}</td>
+                    <td>
+                        <form style="display: inline;" method="POST" action="{{ url_for('productos_proveedores.eliminar_relacion_pp', id_producto=producto[0] if producto is sequence else producto.id, id_proveedor=prov[0]) }}" 
+                              onsubmit="return confirm('¿Esta seguro de eliminar la relacion con {{ prov[1] }}?')">
+                            <button type="submit" class="btn btn-danger">Desasociar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div>
+            <p>No hay proveedores asociados a este producto aun.</p>
+            <p>
+                <a href="{{ url_for('productos_proveedores.asociar', id_producto=producto[0] if producto is sequence else producto.id) }}" class="btn btn-primary">
+                    Asociar primer proveedor
+                </a>
+            </p>
+        </div>
+    {% endif %}
+
+    <div>
+        <a href="{{ url_for('productos_proveedores.lista_productos_proveedores') }}" class="btn btn-secondary">
+            Volver a productos
+        </a>
+        <a href="{{ url_for('productos_proveedores.asociar', id_producto=producto[0] if producto is sequence else producto.id) }}" class="btn btn-primary">
+            Asociar nuevo proveedor
+        </a>
+    </div>
+</div>
+
+
+{% endblock %}
